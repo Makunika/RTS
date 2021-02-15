@@ -1,6 +1,8 @@
 #include "Shader.h"
+#include "../Utils.h"
+#include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+Shader::Shader(const GLchar* name)
 {
     // 1. Получаем исходный код шейдера из filePath
     std::string vertexCode;
@@ -13,8 +15,8 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     try
     {
         // Открываем файлы
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
+        vShaderFile.open(Utils::getShaderPathString(std::string(name) + ".vert"));
+        fShaderFile.open(Utils::getShaderPathString(std::string(name) + ".frag"));
         std::stringstream vShaderStream, fShaderStream;
         // Считываем данные в потоки
         vShaderStream << vShaderFile.rdbuf();
@@ -58,7 +60,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     if (!success)
     {
         glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
     // Шейдерная программа
@@ -79,25 +81,31 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
     glDeleteShader(fragment);
 }
 
-void Shader::Use()
+void Shader::use()
 {
     glUseProgram(this->Program);
 }
 
-GLint Shader::GetUniformLocation(std::string uniform)
+GLint Shader::getUniformLocation(std::string uniform)
 {
     return glGetUniformLocation(this->Program, uniform.c_str());
 }
 
 void Shader::setFloat(std::string uniform, GLfloat value)
 {
-    GLint vertexColorLocation = this->GetUniformLocation(uniform);
+    GLint vertexColorLocation = this->getUniformLocation(uniform);
     glUniform1f(vertexColorLocation, value);
 }
 
 void Shader::setVec4(std::string uniform, GLfloat value1, GLfloat value2, GLfloat value3, GLfloat value4)
 {
-    GLint vertexColorLocation = this->GetUniformLocation(uniform);
+    GLint vertexColorLocation = this->getUniformLocation(uniform);
     glUniform4f(vertexColorLocation, value1, value2, value3, value4);
 
+}
+
+void Shader::setMatrix4(std::string uniform, glm::mat4& matrix)
+{
+    GLint transformLoc = this->getUniformLocation(uniform);
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 }

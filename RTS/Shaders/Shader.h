@@ -5,21 +5,23 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/fwd.hpp>
 
 class Shader
 {
 public:
-    // Идентификатор программы
     GLuint Program;
-    // Конструктор считывает и собирает шейдер
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
-    // Использование программы
-    void Use();
-    // получить локейшен юниформы
-    GLint GetUniformLocation(std::string uniform);
+
+    Shader(const GLchar* name);
+
+    void use();
+
+    GLint getUniformLocation(std::string uniform);
 
     void setFloat(std::string uniform, GLfloat value);
 
     void setVec4(std::string uniform, GLfloat value1, GLfloat value2, GLfloat value3, GLfloat value4);
+
+    void setMatrix4(std::string uniform, glm::mat4& matrix);
 };
 
