@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <GL/glew.h>
 #include "stb_image.h"
 #include "Utils.h"
+#include <glad/glad.h>
 using namespace std;
 
 class Texture

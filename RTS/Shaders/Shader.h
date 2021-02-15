@@ -1,11 +1,11 @@
 #pragma once
-#include <GL/glew.h>
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <glm/fwd.hpp>
+#include <glad/glad.h>
 
 class Shader
 {
