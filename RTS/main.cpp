@@ -2,15 +2,16 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Shaders/Shader.h"
-#include "stb_image.h"
 #include "Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.h"
+#include "ShaderUtils.h"
+#include "TextureCubeMap.h"
+#include "TextureOne.h"
 
 // Function prototypes
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -38,12 +39,9 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     
 
-    // Create a GLFWwindow object that we can use for GLFW's functions
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-    // Set the required callback functions
-    glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetScrollCallback(window, scroll_callback);
@@ -54,81 +52,26 @@ int main()
         return -1;
     }
 
-    // Define the viewport dimensions
     glViewport(0, 0, WIDTH, HEIGHT);
 
     glEnable(GL_DEPTH_TEST);
-    // Build and compile our shader program
+
     Shader ourShader("test");
+    Shader skyboxShader("skybox");
+    Shader lightShader("light");
+    Shader containerShader("container");
 
 
-    // Указание вершин (и буфера(ов)) и настройка вершинных атрибутов
-    float vertices[] = {
-        // координаты        // текстурные координаты
-       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    vector<float> vertices = ShaderUtils::getCube(1);
+    VAO_VBO vao_vbo_container = ShaderUtils::loadTextureAndCoordinate(&vertices[0], vertices.size());
 
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-       -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // Координатные атрибуты
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // Цветовые атрибуты
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
+    vector<float> vertices_light = ShaderUtils::getCubeWithNormal();
+    VAO_VBO vao_vbo_light = ShaderUtils::load2vec3(&vertices_light[0], vertices_light.size());
 
 
     glm::vec3 cubePositions[] = {
           glm::vec3(0.0f,  0.0f,  0.0f),
-          glm::vec3(2.0f,  5.0f, -15.0f),
+          glm::vec3(22.0f,  5.0f, 15.0f),
           glm::vec3(-1.5f, -2.2f, -2.5f),
           glm::vec3(-3.8f, -2.0f, -12.3f),
           glm::vec3(2.4f, -0.4f, -3.5f),
@@ -139,7 +82,8 @@ int main()
           glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
-    float vertices2[] = {
+    vector<float> vertices2
+	{
         5.0f, -0.5f,  5.0f,  100.0f, 00.0f,
        -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
        -5.0f, -0.5f, -5.0f,  0.0f, 100.0f,
@@ -148,28 +92,26 @@ int main()
        -5.0f, -0.5f, -5.0f,  0.0f, 100.0f,
         5.0f, -0.5f, -5.0f,  100.0f, 100.0f
     };
-    unsigned int VBO2, VAO2;
-    glGenVertexArrays(1, &VAO2);
-    glGenBuffers(1, &VBO2);
+    VAO_VBO vao_vbo_pol = ShaderUtils::loadTextureAndCoordinate(&vertices2[0], vertices2.size());
+	
+    Texture textureContainer = TextureOne("container.jpg");
 
-    glBindVertexArray(VAO2);
+    const vector<std::string> skybox
+    {
+        "sky\\right.jpg",
+        "sky\\left.jpg",
+        "sky\\top.jpg",
+        "sky\\bottom.jpg",
+        "sky\\front.jpg",
+        "sky\\back.jpg"
+    };
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+    Texture skyboxTexture = TextureCubeMap(skybox);
 
-    // Координатные атрибуты
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // Цветовые атрибуты
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-
-
-
-
-    Texture texture = Texture("container.jpg");
+    vector<float> skyboxVertices = ShaderUtils::getCube();
+    VAO_VBO vao_vbo_skybox = ShaderUtils::loadOnlyCoordinate(&skyboxVertices[0], skyboxVertices.size());
+	
+	
 
     glm::mat4 model = glm::mat4(1.0f); // сначала инициализируем единичную матрицу
     glm::mat4 projection = glm::mat4(1.0f);
@@ -178,49 +120,77 @@ int main()
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
-        float currentFrame = glfwGetTime();
+	    const float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
         processInput(window);
+
+    	
         // Рендеринг
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBindTexture(GL_TEXTURE_2D, texture.getTexture());
+        glDepthMask(GL_FALSE);
+        skyboxShader.use();
+        glm::mat4 view = glm::mat4(glm::mat3(camera.getViewMatrix()));
+        skyboxShader.setProjectionAndView(projection, view);
+        glBindVertexArray(vao_vbo_skybox.VAO);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture.getTexture());
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDepthMask(GL_TRUE);
 
-        // Активируем шейдер
-        ourShader.use();
-
-        // Создаем преобразование
-        
-        // Примечание: В настоящее время мы устанавливаем матрицу проекции для каждого кадра, но поскольку матрица проекции редко меняется, то рекомендуется устанавливать её (единожды) вне основного цикла
-        ourShader.setMatrix4("projection", projection);
-        glm::mat4 view = camera.getViewMatrix();
-        ourShader.setMatrix4("view", view);
-
-        // Рендерим ящик
-        glBindVertexArray(VAO);
-        for (int i = 0; i < 10; i++)
+    	
+        glBindTexture(GL_TEXTURE_2D, textureContainer.getTexture());
+        glBindVertexArray(vao_vbo_container.VAO);
+        containerShader.use();
+        view = camera.getViewMatrix();
+        containerShader.setProjectionAndView(projection, view);
+        for (int i = 0; i < 8; i++)
         {
-
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = glm::radians(20.0f * i);
-            if (i == 0 || i % 3 == 0) {
+            if (i == 0 || i % 2 == 0) {
                 angle = sin(glfwGetTime());
             }
-
             model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-            
-            ourShader.setMatrix4("model", model);
-
+            containerShader.setMatrix4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-        glBindVertexArray(VAO2);
+    	
+    	
+        ourShader.use();
+        view = camera.getViewMatrix();
+        ourShader.setProjectionAndView(projection, view);
+        glBindVertexArray(vao_vbo_light.VAO);
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
+        model = glm::translate(model, cubePositions[8]);
+        float angle = glm::radians(20.0f * 8);
+        //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
         ourShader.setMatrix4("model", model);
+        ourShader.setVec3("objectColor", 0.0f, 0.5f, 0.31f);
+        ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("lightPos", cubePositions[9]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        lightShader.use();
+        view = camera.getViewMatrix();
+        lightShader.setProjectionAndView(projection, view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[9]);
+        angle = glm::radians(20.0f * 9);
+        model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::scale(model, glm::vec3(0.2f));
+        lightShader.setMatrix4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        containerShader.use();
+        view = camera.getViewMatrix();
+        containerShader.setProjectionAndView(projection, view);
+        glBindVertexArray(vao_vbo_pol.VAO);
+        model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
+        containerShader.setMatrix4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
 
@@ -228,24 +198,20 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    // Properly de-allocate all resources once they've outlived their purpose
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    vao_vbo_light.disponse();
+    vao_vbo_pol.disponse();
     // Terminate GLFW, clearing any resources allocated by GLFW.
     glfwTerminate();
     return 0;
 }
 
-// Is called whenever a key is pressed/released via GLFW
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
 void processInput(GLFWwindow* window)
 {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+
     float cameraSpeed = 2.5f * deltaTime;
+	
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.processKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

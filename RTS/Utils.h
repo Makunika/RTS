@@ -12,5 +12,9 @@ public:
 	static std::string getImagePathString(std::string name) {
 		return ("C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\images\\" + name);
 	}
+
+	static std::string getImagePathString() {
+		return "C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\images\\";
+	}
 };
 

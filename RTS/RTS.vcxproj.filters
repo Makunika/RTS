@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы заголовков\texture">
+      <UniqueIdentifier>{8bfa6e62-02d0-41df-8ecd-58861dfd2db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\camera">
+      <UniqueIdentifier>{75f99f59-553b-44ae-a0c0-7bcbc0fce963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\utils">
+      <UniqueIdentifier>{15c5bf0c-7e62-400c-b3bf-12bde3319f66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\shaders">
+      <UniqueIdentifier>{264c2eec-c3ab-4dc8-a53a-b9988c02eeff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,20 +41,29 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shaders\Shader.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\texture</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="TextureCubeMap.h">
+      <Filter>Файлы заголовков\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureOne.h">
+      <Filter>Файлы заголовков\texture</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Файлы заголовков\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Shader.h">
+      <Filter>Файлы заголовков\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Файлы заголовков\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderUtils.h">
+      <Filter>Файлы заголовков\shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +71,24 @@
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="resources\shaders\test.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\skybox.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\skybox.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\light.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\light.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\container.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\container.vert">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

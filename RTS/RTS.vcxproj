@@ -150,11 +150,20 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Shaders\Shader.h" />
+    <ClInclude Include="ShaderUtils.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureCubeMap.h" />
+    <ClInclude Include="TextureOne.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\shaders\container.frag" />
+    <None Include="resources\shaders\container.vert" />
+    <None Include="resources\shaders\light.frag" />
+    <None Include="resources\shaders\light.vert" />
+    <None Include="resources\shaders\skybox.frag" />
+    <None Include="resources\shaders\skybox.vert" />
     <None Include="resources\shaders\test.frag" />
     <None Include="resources\shaders\test.vert" />
   </ItemGroup>

@@ -64,10 +64,11 @@ public:
         return glm::lookAt(Position, Position + Front, Up);
     }
 
+
     //Обрабатываем входные данные, полученные от любой клавиатуроподобной системы ввода. Принимаем входной параметр в виде определенного камерой перечисления (для абстрагирования его от оконных систем)
     void processKeyboard(CameraMovement direction, float deltaTime)
     {
-        float velocity = MovementSpeed * deltaTime;
+	    const float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
             Position += Front * velocity;
         if (direction == BACKWARD)
@@ -77,7 +78,7 @@ public:
         if (direction == RIGHT)
             Position += Right * velocity;
 
-        Position.y = 0.0f; 
+        //Position.y = 0.0f; 
     }
 
     //Обрабатываем входные данные, полученные от системы ввода с помощью мыши. Ожидаем в качестве параметров значения смещения как в направлении X, так и в направлении Y.

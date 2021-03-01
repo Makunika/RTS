@@ -101,7 +101,24 @@ void Shader::setVec4(std::string uniform, GLfloat value1, GLfloat value2, GLfloa
 {
     GLint vertexColorLocation = this->getUniformLocation(uniform);
     glUniform4f(vertexColorLocation, value1, value2, value3, value4);
+}
 
+void Shader::setVec3(std::string uniform, GLfloat value1, GLfloat value2, GLfloat value3)
+{
+    GLint vertexColorLocation = this->getUniformLocation(uniform);
+    glUniform3f(vertexColorLocation, value1, value2, value3);
+}
+
+void Shader::setVec3(std::string uniform, glm::vec3& vec3)
+{
+    GLint vertexColorLocation = this->getUniformLocation(uniform);
+    glUniform3f(vertexColorLocation, vec3.x, vec3.y, vec3.z);
+}
+
+void Shader::setProjectionAndView(glm::mat4& proj, glm::mat4& view)
+{
+    setMatrix4("projection", proj);
+    setMatrix4("view", view);
 }
 
 void Shader::setMatrix4(std::string uniform, glm::mat4& matrix)
