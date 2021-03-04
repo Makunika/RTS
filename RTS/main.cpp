@@ -1,12 +1,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 #include "Shaders/Shader.h"
 #include "Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.h"
+#include "Model.h"
 #include "ShaderUtils.h"
 #include "TextureCubeMap.h"
 #include "TextureOne.h"
@@ -15,6 +17,7 @@
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -28,8 +31,9 @@ float deltaTime = 0.0f;	// время между текущим и последним кадрами
 float lastFrame = 0.0f; // время последнего кадра
 
 // The MAIN function, from here we start the application and run the game loop
-int main()
+int main(int argc, char* argv[])
 {
+    std::cout << argv[0];
     // Init GLFW
     glfwInit();
     // Set all the required options for GLFW
@@ -55,7 +59,7 @@ int main()
     glViewport(0, 0, WIDTH, HEIGHT);
 
     glEnable(GL_DEPTH_TEST);
-
+	
     Shader ourShader("test");
     Shader skyboxShader("skybox");
     Shader lightShader("light");
@@ -110,6 +114,15 @@ int main()
 
     vector<float> skyboxVertices = ShaderUtils::getCube();
     VAO_VBO vao_vbo_skybox = ShaderUtils::loadOnlyCoordinate(&skyboxVertices[0], skyboxVertices.size());
+
+    stbi_set_flip_vertically_on_load(true);
+
+    // Компилирование нашей шейдерной программы
+    Shader modelShader("model_test");
+
+    // Загрузка моделей
+    Model ourModel("C:/Users/Max/source/repos/Makunika/RTS/RTS/resources/objects/rec/salfeobj2.obj");
+
 	
 	
 
@@ -117,7 +130,6 @@ int main()
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-    // Game loop
     while (!glfwWindowShouldClose(window))
     {
 	    const float currentFrame = glfwGetTime();
@@ -166,10 +178,10 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[8]);
         float angle = glm::radians(20.0f * 8);
-        //model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
         ourShader.setMatrix4("model", model);
-        ourShader.setVec3("objectColor", 0.0f, 0.5f, 0.31f);
-        ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("objectColor", 0.0f, 0.0f, 1.0f);
+        ourShader.setVec3("lightColor", 1.0f, 0.0f, 0.5f);
         ourShader.setVec3("lightPos", cubePositions[9]);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -193,6 +205,16 @@ int main()
         containerShader.setMatrix4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
+
+        // Рендеринг загруженной модели
+        modelShader.use();
+        view = camera.getViewMatrix();
+        modelShader.setProjectionAndView(projection, view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(10.0f, 10.0f, 10.0f)); // смещаем вниз чтобы быть в центре сцены
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// объект слишком большой для нашей сцены, поэтому немного уменьшим его
+        ourShader.setMatrix4("model", model);
+        ourModel.draw(modelShader);
 
         // glfw: обмен содержимым front- и back- буферов. Отслеживание событий ввода\вывода (была ли нажата/отпущена кнопка, перемещен курсор мыши и т.п.)
         glfwSwapBuffers(window);

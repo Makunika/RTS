@@ -25,6 +25,9 @@
     <Filter Include="Файлы заголовков\shaders">
       <UniqueIdentifier>{264c2eec-c3ab-4dc8-a53a-b9988c02eeff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Файлы заголовков\models">
+      <UniqueIdentifier>{4e744a89-7187-45b5-a05d-2c1d4c1c27ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -65,6 +68,12 @@
     <ClInclude Include="ShaderUtils.h">
       <Filter>Файлы заголовков\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Файлы заголовков\models</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Файлы заголовков\models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\test.frag">
@@ -89,6 +98,12 @@
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="resources\shaders\container.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\model_test.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="resources\shaders\model_test.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

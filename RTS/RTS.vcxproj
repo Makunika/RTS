@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\pshbl\source\repos\RTS\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\pshbl\source\repos\RTS\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Max\source\repos\Makunika\RTS\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Max\source\repos\Makunika\RTS\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -90,11 +90,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\Max\source\repos\Makunika\RTS\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mtd.lib;opengl32.lib;glfw3.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Max\source\repos\Makunika\RTS\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -149,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Shaders\Shader.h" />
     <ClInclude Include="ShaderUtils.h" />
     <ClInclude Include="stb_image.h" />
@@ -162,6 +167,8 @@
     <None Include="resources\shaders\container.vert" />
     <None Include="resources\shaders\light.frag" />
     <None Include="resources\shaders\light.vert" />
+    <None Include="resources\shaders\model_test.frag" />
+    <None Include="resources\shaders\model_test.vert" />
     <None Include="resources\shaders\skybox.frag" />
     <None Include="resources\shaders\skybox.vert" />
     <None Include="resources\shaders\test.frag" />
