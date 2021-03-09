@@ -7,16 +7,15 @@
 class Utils {
 public:
 	static std::string getShaderPathString(std::string name) {
-		std::string alo = "C:\\Users\\Max\\source\\repos\\Makunika\\RTS\\RTS\\resources\\shaders\\" + name;
-		return alo;
+		return "C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\shaders\\" + name;
 	}
 
 	static std::string getImagePathString(std::string name) {
-		return "C:\\Users\\Max\\source\\repos\\Makunika\\RTS\\RTS\\resources\\images\\" + name;
+		return "C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\images\\" + name;
 	}
 
 	static std::string getImagePathString() {
-		return "C:\\Users\\Max\\source\\repos\\Makunika\\RTS\\RTS\\resources\\images\\";
+		return "C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\images\\";
 	}
 };
 

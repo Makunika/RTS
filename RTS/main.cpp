@@ -115,13 +115,13 @@ int main(int argc, char* argv[])
     vector<float> skyboxVertices = ShaderUtils::getCube();
     VAO_VBO vao_vbo_skybox = ShaderUtils::loadOnlyCoordinate(&skyboxVertices[0], skyboxVertices.size());
 
-    stbi_set_flip_vertically_on_load(true);
+    //stbi_set_flip_vertically_on_load(true);
 
     // Компилирование нашей шейдерной программы
     Shader modelShader("model_test");
 
     // Загрузка моделей
-    Model ourModel("C:/Users/Max/source/repos/Makunika/RTS/RTS/resources/objects/rec/salfeobj2.obj");
+    Model ourModel("C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\objects\\rec\\salfeobj2.obj");
 
 	
 	
@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(10.0f, 10.0f, 10.0f)); // смещаем вниз чтобы быть в центре сцены
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// объект слишком большой для нашей сцены, поэтому немного уменьшим его
-        ourShader.setMatrix4("model", model);
+        modelShader.setMatrix4("model", model);
         ourModel.draw(modelShader);
 
         // glfw: обмен содержимым front- и back- буферов. Отслеживание событий ввода\вывода (была ли нажата/отпущена кнопка, перемещен курсор мыши и т.п.)

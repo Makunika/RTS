@@ -95,10 +95,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump cyberpnuktexture\\kabukcıkıs_Normal_DirectX.png
-map_Kd cyberpnuktexture\\kabukcıkıs_Base_Color.png
-map_Ns cyberpnuktexture\\kabukcıkıs_Roughness.png
-refl cyberpnuktexture\\kabukcıkıs_Metallic.png
+map_Bump cyberpnuktexture\\kabukcikis_Normal_DirectX.png
+map_Kd cyberpnuktexture\\kabukcikis_Base_Color.png
+map_Ns cyberpnuktexture\\kabukcikis_Roughness.png
+refl cyberpnuktexture\\kabukcikis_Metallic.png
 
 newmtl kabunic
 Ns 225.000000

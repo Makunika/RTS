@@ -1,4 +1,6 @@
 #pragma once
+#include <regex>
+
 #include "Mesh.h"
 #include "Shaders/Shader.h"
 #include <assimp/Importer.hpp>
@@ -47,7 +49,7 @@ inline void Model::loadModel(string path)
         cout << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;
         return;
     }
-    directory = path.substr(0, path.find_last_of('/'));
+    directory = path.substr(0, path.find_last_of('\\'));
 
     processNode(scene->mRootNode, scene);
 }
@@ -106,15 +108,33 @@ inline Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
             vertex.tex_coords = glm::vec2(0.0f, 0.0f);
 
         // Касательный вектор
-        vector.x = mesh->mTangents[i].x;
-        vector.y = mesh->mTangents[i].y;
-        vector.z = mesh->mTangents[i].z;
+    	if (mesh->mTangents == nullptr)
+    	{
+            vector.x = 0.0f;
+            vector.y = 0.0f;
+            vector.z = 0.0f;
+    	}
+        else
+        {
+            vector.x = mesh->mTangents[i].x;
+            vector.y = mesh->mTangents[i].y;
+            vector.z = mesh->mTangents[i].z;
+        }
         vertex.tangent = vector;
 
         // Вектор бинормали
-        vector.x = mesh->mBitangents[i].x;
-        vector.y = mesh->mBitangents[i].y;
-        vector.z = mesh->mBitangents[i].z;
+        if (mesh->mBitangents == nullptr)
+        {
+            vector.x = 0.0f;
+            vector.y = 0.0f;
+            vector.z = 0.0f;
+        }
+        else
+        {
+            vector.x = mesh->mBitangents[i].x;
+            vector.y = mesh->mBitangents[i].y;
+            vector.z = mesh->mBitangents[i].z;
+        }
         vertex.bitangent = vector;
         vertices.push_back(vertex);
     }
@@ -190,7 +210,9 @@ inline vector<Texture_> Model::loadMaterialTextures(aiMaterial* mat, aiTextureTy
 inline unsigned int Model::textureFromFile(const char* path, const string& directory)
 {
     string filename = string(path);
-    filename = directory + '/' + filename;
+    std::regex e("\\\\\\\\");
+    filename = regex_replace(filename, e, "\\");
+    filename = directory + "\\" + filename;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
