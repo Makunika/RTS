@@ -115,13 +115,13 @@ int main(int argc, char* argv[])
     vector<float> skyboxVertices = ShaderUtils::getCube();
     VAO_VBO vao_vbo_skybox = ShaderUtils::loadOnlyCoordinate(&skyboxVertices[0], skyboxVertices.size());
 
-    //stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(true);
 
     // Компилирование нашей шейдерной программы
     Shader modelShader("model_test");
 
     // Загрузка моделей
-    Model ourModel("C:\\Users\\pshbl\\source\\repos\\RTS\\RTS\\resources\\objects\\rec\\salfeobj2.obj");
+    Model ourModel(R"(D:\oldold\code\vs\RTS\RTS\resources\objects\backpack\backpack.obj)");
 
 	
 	
