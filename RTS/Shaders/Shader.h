@@ -29,5 +29,7 @@ public:
     void setProjectionAndView(glm::mat4& proj, glm::mat4& view);
 
     void setMatrix4(std::string uniform, glm::mat4& matrix);
+
+	void setInt(std::string uniform, int value);
 };
 

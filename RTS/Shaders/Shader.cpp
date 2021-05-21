@@ -126,3 +126,9 @@ void Shader::setMatrix4(std::string uniform, glm::mat4& matrix)
     GLint transformLoc = this->getUniformLocation(uniform);
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
 }
+
+void Shader::setInt(std::string uniform, int value)
+{
+    GLint uniform_ = this->getUniformLocation(uniform);
+    glUniform1i(uniform_, value);
+}

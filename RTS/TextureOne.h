@@ -9,28 +9,38 @@ class TextureOne : public Texture
 public:
     TextureOne(string filename) : Texture() 
     {
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glGenTextures(1, &(this->texture));
 
-        // Устанавливаем параметры наложения и фильтрации текстур (для текущего связанного объекта текстуры)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        // Загрузка и генерация текстуры
-        int nrChannels;
-        unsigned char* data = stbi_load(Utils::getImagePathString(move(filename)).c_str(), &width, &height, &nrChannels, 0);
+        int width, height, nrComponents;
+        unsigned char* data = stbi_load(Utils::getImagePathString(move(filename)).c_str(), &width, &height, &nrComponents, 0);
         if (data)
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            GLenum format;
+            if (nrComponents == 1)
+                format = GL_RED;
+            else if (nrComponents == 3)
+                format = GL_RGB;
+            else if (nrComponents == 4)
+                format = GL_RGBA;
+
+            glBindTexture(GL_TEXTURE_2D, this->texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            stbi_image_free(data);
         }
         else
         {
-            std::cout << "Failed to load texture" << std::endl;
+            std::cout << "Texture failed to load at path: " << filename << std::endl;
+            stbi_image_free(data);
         }
-        stbi_image_free(data);
+        this->height = height;
+        this->width = width;
     }
 };
 
